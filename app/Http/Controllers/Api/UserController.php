@@ -53,7 +53,7 @@ class UserController extends Controller
       $role_id = $request->get('role');
       $service = "";
       $company = "";
-      if($role_id == 1){
+      if($role_id == 3){
         $service = $request->get('service');
         $company = $request->get('company');
       }

@@ -43,8 +43,8 @@
                         <img class="img-responsive pull-left logo hidden-xs animated fadeIn" src="{{ Voyager::image($admin_logo_img) }}" alt="Logo Icon">
                         @endif
                         <div class="copy animated fadeIn">
-                            <h1>{{ Voyager::setting('admin_title', 'Datelux') }}</h1>
-                            <p>{{ Voyager::setting('admin_description', 'Welcome to Datelux.') }}</p>
+                            <h1>{{ Voyager::setting('admin_title', 'Oshun') }}</h1>
+                            <p>{{ Voyager::setting('admin_description', 'Welcome to Oshun.') }}</p>
                         </div>
                     </div> <!-- .logo-title-container -->
                 </div>

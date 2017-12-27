@@ -661,10 +661,19 @@ class UserController extends Controller
     $latitude = $request->get('latitude');
     $longitude = $request->get('longitude');
     $random = $request->get('random');
+
+    $haversine = "(6371 * acos(cos(radians($latitude)) 
+                     * cos(radians(`latitude`)) 
+                     * cos(radians(`longitude`) 
+                     - radians($longitude)) 
+                     + sin(radians($latitude)) 
+                     * sin(radians(`latitude`))))";
+
+
     if ($random == 1) {
-      $users  = User::select('users.*')->where('role_id', '=', $role_id)->orderByRaw('RAND()')->take($limit)->get();
+      $users  = User::select('users.*')->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->where('role_id', '=', $role_id)->orderByRaw('RAND()')->take($limit)->get();
     } else {
-      $users  = User::select('users.*')->where('role_id', '=', $role_id)->take($limit)->get();
+      $users  = User::select('users.*')->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->where('role_id', '=', $role_id)->take($limit)->get();
     }
     
 

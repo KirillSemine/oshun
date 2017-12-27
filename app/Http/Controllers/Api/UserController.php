@@ -655,6 +655,16 @@ class UserController extends Controller
       ]);  
   }
 
+  function searchUserlist(Request $request){
+    $role_id = $request->get('role_id');
+    $users  = User::select('users.*')->where('role_id', '=', $role_id)->get();
+
+    return response()->json([
+      'status' => 'success',
+      'result' => $users
+    ]);
+  }
+
   function userlinked(Request $request){
 
     $token    = $request->get('token');

@@ -25,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'social_id','birthday','password', 'gender', 'app_token', 'device_token','interesting','avatar', 'job', 'phone', 'role_id', 'service', 'company'
+        'name', 'email', 'social_id','birthday','password', 'gender', 'app_token', 'device_token','interesting','avatar', 'job', 'phone', 'role_id', 'service', 'company', 'latitude', 'longitude'
     ];
     protected $casts = [ 'swipes' => 'integer', 'isPaid' => 'integer', 'userlikes' => 'integer', 'user_liked' => 'integer', 'user_disliked' => 'integer', 'botlikes' => 'integer'];
 

@@ -657,7 +657,16 @@ class UserController extends Controller
 
   function searchUserlist(Request $request){
     $role_id = $request->get('role_id');
-    $users  = User::select('users.*')->where('role_id', '=', $role_id)->get();
+    $limit = $request->get('limit');
+    $latitude = $request->get('latitude');
+    $longitude = $request->get('longitude');
+    $random = $request->get('random');
+    if ($random == 1) {
+      $users  = User::select('users.*')->where('role_id', '=', $role_id)->orderByRaw('RAND()')->take($limit)->get();
+    } else {
+      $users  = User::select('users.*')->where('role_id', '=', $role_id)->take($limit)->get();
+    }
+    
 
     return response()->json([
       'status' => 'success',

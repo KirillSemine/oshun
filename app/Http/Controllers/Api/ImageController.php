@@ -94,11 +94,11 @@ class ImageController extends Controller
 
     $filename = Str::random(20);
 
-    $fullPath = 'users'.$user_id.'/'.$filename.'.'.$file->getClientOriginalExtension();
+    $fullPath = 'users/'.$user_id.'/'.$filename.'.'.$file->getClientOriginalExtension();
     $ext = $file->guessClientExtension();
 
     $image = Image::make($file)->resize($resizeWidth, $resizeHeight, function(Constraint $constraint){
-      $constraint->aspectRation();
+      $constraint->aspectRatio();
       $constraint->upsize();
     })->encode($file->getClientOriginalExtension(), 75);
 
@@ -114,7 +114,7 @@ class ImageController extends Controller
       ]); 
     }
 
-    $currentuser = User::where('user_id', '=', $user_id)->first();
+    $currentuser = User::where('id', '=', $user_id)->first();
     $currentuser->avatar = $fullPath;
     $currentuser->save();
 

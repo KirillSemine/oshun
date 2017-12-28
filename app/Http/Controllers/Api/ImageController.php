@@ -80,6 +80,51 @@ class ImageController extends Controller
 
   }
 
+  public function update_proilfeImage(Request $request)
+  {
+    $fullFilename = null;
+    $resizeWidth = 1800;
+    $resizeHeight = null;    
+
+
+    $user_id = $request->get('user_id');
+    $file = $request->file('image');
+
+    $extension = $file->getClientOriginalExtension();
+
+    $filename = Str::random(20);
+
+    $fullPath = 'users'.$user_id.'/'.$filename.'.'.$file->getClientOriginalExtension();
+    $ext = $file->guessClientExtension();
+
+    $image = Image::make($file)->resize($resizeWidth, $resizeHeight, function(Constraint $constraint){
+      $constraint->aspectRation();
+      $constraint->upsize();
+    })->encode($file->getClientOriginalExtension(), 75);
+
+    //move uploaded file from temp to uploads directory
+    if(Storage::disk(config('voyager.storage.disk'))->put($fullPath, (string) $image, 'public')){
+      $status = 'Image successfully uploaded!';
+      $fullFilename = $fullPath;
+    } else {
+      $status = 'Upload Fail: Unknown error occurred!';
+      return response()->json([
+        'result' => 'error',
+        'error' => $status
+      ]); 
+    }
+
+    $currentuser = User::where('user_id', '=', $user_id)->first();
+    $currentuser->avatar = $fullPath;
+    $currentuser->save();
+
+    return response([
+      'result' => 'success',
+      'user' => $currentuser
+    ]);
+
+  }
+
   Public function upload_profile(ImageuploadRequest $request)
   {
 

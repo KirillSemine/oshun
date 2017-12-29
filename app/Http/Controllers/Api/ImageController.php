@@ -118,6 +118,7 @@ class ImageController extends Controller
     $currentuser->avatar = $fullPath;
     $currentuser->save();
 
+    $currentuser->avatar = Voyager::image($fullPath);
     return response([
       'result' => 'success',
       'user' => $currentuser

@@ -109,7 +109,7 @@ class ImageController extends Controller
     } else {
       $status = 'Upload Fail: Unknown error occurred!';
       return response()->json([
-        'result' => 'error',
+        'status' => 'error',
         'error' => $status
       ]); 
     }
@@ -120,7 +120,7 @@ class ImageController extends Controller
 
     $currentuser->avatar = Voyager::image($fullPath);
     return response([
-      'result' => 'success',
+      'status' => 'success',
       'user' => $currentuser
     ]);
 

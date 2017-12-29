@@ -20,6 +20,8 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\LocationRequest;
 use App\Http\Requests\UserlikeRequest;
 
+use TCG\Voyager\Facades\Voyager;
+
 use Tymon\JWTAuth\JWTAuth;
 use Davibennun\LaravelPushNotification\PushNotification;
 use JWTAuthException;
@@ -284,9 +286,13 @@ class UserController extends Controller
     $images = Userimage::where('user_id', '=', $this->user->id)->get();
     // $this->user = $user->update(['app_token' => $token]);
 
+    $currentuser = $this->user;
+
+    $currentuser->avatar = Voyager::image($this->user->avatar);
+
     return response()->json([
         'status' => 'success',  
-        'user' => $this->user,
+        'user' => $currentuser,
         'images' => $images
       ]);
 	}

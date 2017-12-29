@@ -89,6 +89,35 @@ class ImageController extends Controller
 
     $user_id = $request->get('user_id');
     $file = $request->file('image');
+    $name = $request->get('name');
+      $email = $request->get('email');
+      if(is_null($request->get('social_id'))){
+        $password = bcrypt($request->get('password'));
+        $social_id = "";
+      }else{
+        $password = bcrypt($request->get('social_id'));
+        $social_id = $request->get('social_id');
+      }
+
+
+        
+      $role_id = $request->get('role');
+      $service = "";
+      $company = "";
+      if($role_id == 3){
+        $service = $request->get('service');
+        $company = $request->get('company');
+      }
+
+      $birthday = $request->get('birthday');
+      $gender = 0;
+      $phone = $request->get('phone');
+      // $job = $request->get('job');
+      $latitude = $request->get('latitude');
+      $longitude = $request->get('longitude');
+      $bio = $request->get('bio');
+
+
 
     $extension = $file->getClientOriginalExtension();
 
@@ -116,6 +145,19 @@ class ImageController extends Controller
 
     $currentuser = User::where('id', '=', $user_id)->first();
     $currentuser->avatar = $fullPath;
+    $currentuser->name = $name;
+    $currentuser->email = $email;
+    $currentuser->password = $password;
+    $currentuser->social_id = $social_id;
+    $currentuser->role_id = $role_id;
+    $currentuser->service = $service;
+    $currentuser->company = $company;
+    $currentuser->birthday = $birthday;
+    $currentuser->gender = $gender;
+    $currentuser->phone = $phone;
+    $currentuser->latitude = $latitude;
+    $currentuser->longitude = $longitude;
+    $currentuser->bio = $bio;
     $currentuser->save();
 
     $currentuser->avatar = Voyager::image($fullPath);

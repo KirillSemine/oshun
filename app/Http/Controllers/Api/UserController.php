@@ -682,6 +682,10 @@ class UserController extends Controller
       $users  = User::select('users.*')->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->where('role_id', '=', $role_id)->take($limit)->get();
     }
     
+    // return full image url
+    foreach ($users as $tempuser){
+      $tempuser->avatar = Voyager::image($tempuser->avatar);
+    }
 
     return response()->json([
       'status' => 'success',

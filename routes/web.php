@@ -38,6 +38,7 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'Api'], function () {
   Route::post('/user/push', ['as' => 'user.push','uses' => 'UserController@updatePush']);
 
   Route::get('/user/searchuserlist', ['as' => 'user.searchuserlist', 'uses' => 'UserController@searchUserlist']);
+  Route::post('/user/givefeedback', ['as' => 'user.givefeedback', 'uses' => 'UserController@givefeedback']);
   Route::post('/image/uploadprofileImage', ['as' => 'image.uploadprofileImage', 'uses' => 'ImageController@update_proilfeImage']);
 
 

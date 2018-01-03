@@ -693,6 +693,24 @@ class UserController extends Controller
     ]);
   }
 
+  function givefeedback(Request $request){
+    $user_id = $request->get('user_id');
+    $rating = $request->get('rating');
+    $user = User::where('id', '=', $user_id)->first();
+    $currentrating = $user->rating;
+    $ratingcount = $user->rating_count;
+    $temp = $currentrating*$ratingcount+$rating;
+    $ratingcount = $ratingcount + 1;
+    $user->rating = $temp/$ratingcount;
+    $user->rating_count = $ratingcount;
+    $user->save();
+
+    return response()->json([
+      'status' => 'success',
+      'rating' => $user->rating
+    ]);
+  }
+
   function userlinked(Request $request){
 
     $token    = $request->get('token');

@@ -168,6 +168,53 @@ class ImageController extends Controller
 
   }
 
+  public function upload_image(Request $request){
+    $fullFilename = null;
+    $resizeWidth = 1800;
+    $resizeHeight = null;
+
+    $user_id = $request->get('user_id');
+    $file = $request->file('image');
+    $styles = $request->get('style');
+    $description = $request->get('description');
+
+    $extension = $file->getClientOriginalExtension();
+
+    $filename = Str::random(20);
+
+    $fullPath = 'users/'.$user_id.'/'.$filename.'.'.$file->getClientOriginalExtension();
+    $ext = $file->guessClientExtension();
+
+    $image = Image::make($file)->resize($resizeWidth, $resizeHeight, function(Constraint $constraint){
+      $constraint->aspectRatio();
+      $constraint->upsize();
+    })->encode($file->getClientOriginalExtension(), 75);
+
+    //move uploaded file from temp to uploads directory
+    if(Storage::disk(config('voyager.storage.disk'))->put($fullPath, (string) $image, 'public')){
+      $status = 'Image successfully uploaded!';
+      $fullFilename = $fullPath;
+    } else {
+      $status = 'Upload Fail: Unknown error occurred!';
+      return response()->json([
+        'status' => 'error',
+        'error' => $status
+      ]); 
+    }
+    $newImage = $this->userimage->create([
+      'user_id' => $user_id,
+      'url' => $fullPath,
+      'description' => $description,
+      'styles' => $styles
+    ]);
+    $newImage->url = Voyager::image($fullPath);
+    return response()->json([
+      'result' => 'success',
+      'image' => $newImage
+      ]);
+
+  }
+
   Public function upload_profile(ImageuploadRequest $request)
   {
 

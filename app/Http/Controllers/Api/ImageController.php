@@ -36,7 +36,7 @@ class ImageController extends Controller
     $this->filesystem = config('voyager.storage.disk');
   }
 
-  Public function get_images(ImagelistRequest $request){
+  Public function get_images1(ImagelistRequest $request){
 
   	$token = $request->get('token');
     $this->user = $this->jwtauth->toUser($token);
@@ -44,6 +44,16 @@ class ImageController extends Controller
 
   	return response()->json([
   	  'status' => 'success',
+      'image' => $images
+      ]);
+  }
+
+  public function get_images(Request $request){
+    $user_id = $request->get('user_id');
+    $images = Userimage::where('user_id', '=', $user_id)->get();
+
+    return response()->json([
+      'status' => 'success',
       'image' => $images
       ]);
   }

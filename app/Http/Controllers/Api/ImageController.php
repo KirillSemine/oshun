@@ -52,6 +52,10 @@ class ImageController extends Controller
     $user_id = $request->get('user_id');
     $images = Userimage::where('user_id', '=', $user_id)->get();
 
+    foreach ($images as $image){
+      $image->url = Voyager::image($image->url);
+    }
+
     return response()->json([
       'status' => 'success',
       'image' => $images

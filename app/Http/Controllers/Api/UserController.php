@@ -11,7 +11,7 @@ use App\User;
 use App\Userimage;
 use App\Userlike;
 use App\Imagelike;
-use App\Services;
+use App\Service;
 use App\Botmessage;
 use App\Pushsetting;
 use DB;
@@ -750,7 +750,7 @@ class UserController extends Controller
                      + sin(radians($latitude)) 
                      * sin(radians(`latitude`))))";
 
-    $service = Services::where('styleName', '=', $style)->first();
+    $service = Service::where('styleName', '=', $style)->first();
 
 
     if (is_null($service)) {

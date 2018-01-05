@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\User;
 use App\Userimage;
-use App\Services;
+use App\Service;
 use App\Http\Requests;
 use App\Http\Requests\ImageuploadRequest;
 use App\Http\Requests\ImagelistRequest;
@@ -233,7 +233,7 @@ class ImageController extends Controller
   function searchimage(Request $request){
     $style = $request->get('style');
 
-    $service = Services::where('styleName', '=', $style)->first();
+    $service = Service::where('styleName', '=', $style)->first();
 
 
     if (is_null($service)) {

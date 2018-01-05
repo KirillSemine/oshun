@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Services extends Model
+class Service extends Model
 {
 
 	use Notifiable;

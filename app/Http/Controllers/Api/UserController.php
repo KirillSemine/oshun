@@ -11,6 +11,7 @@ use App\User;
 use App\Userimage;
 use App\Userlike;
 use App\Imagelike;
+use App\Services;
 use App\Botmessage;
 use App\Pushsetting;
 use DB;
@@ -730,6 +731,36 @@ class UserController extends Controller
     foreach ($users as $tempuser){
       $tempuser->avatar = Voyager::image($tempuser->avatar);
     }
+
+    return response()->json([
+      'status' => 'success',
+      'result' => $users
+    ]);
+  }
+
+  function searchstylelist(Request $request){
+    $latitude = $request->get('latitude');
+    $longitude = $request->get('longitude');
+    $style = $request->get('style');
+
+    $haversine = "(6371 * acos(cos(radians($latitude)) 
+                     * cos(radians(`latitude`)) 
+                     * cos(radians(`longitude`) 
+                     - radians($longitude)) 
+                     + sin(radians($latitude)) 
+                     * sin(radians(`latitude`))))";
+
+    $service = Services::where('styleName', '=', $style)->first();
+
+
+    if (is_null($service)) {
+      return response()->json([
+      'status' => 'failed',
+      'result' => 'style error'
+    ]);
+    }
+
+    $users = User::select('users.*')->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->whereRaw("service like '%".$service->service_id."%'")->get();
 
     return response()->json([
       'status' => 'success',

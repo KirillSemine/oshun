@@ -41,9 +41,11 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'Api'], function () {
   Route::post('/user/givefeedback', ['as' => 'user.givefeedback', 'uses' => 'UserController@givefeedback']);
   Route::post('/user/imagelike', ['as' => 'user.imagelike', 'uses' => 'UserController@imagelike']);
   Route::post('/user/imageliked', ['as' => 'user.imageliked', 'uses' => 'UserController@imageliked']);
+  Route::get('/user/searchstylelist', ['as' => 'user.searchstylelist', 'uses' => 'UserController@searchstylelist']);
   Route::post('/image/uploadprofileImage', ['as' => 'image.uploadprofileImage', 'uses' => 'ImageController@update_proilfeImage']);
   Route::post('/image/upload_image', ['as' => 'image.upload_image', 'uses' => 'ImageController@upload_image']);
   Route::get('/image/get_images', ['as' => 'image.get_images', 'uses' => 'ImageController@get_images']);
+  Route::get('/image/searchimage', ['as' => 'image.searchimage', 'uses' => 'ImageController@searchimage']);
 
 
   Route::post('/image/upload', ['as' => 'image.upload','uses' => 'ImageController@upload_profile']);

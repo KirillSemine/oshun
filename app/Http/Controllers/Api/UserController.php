@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use App\User;
 use App\Userimage;
 use App\Userlike;
+use App\Imagelike;
 use App\Botmessage;
 use App\Pushsetting;
 use DB;
@@ -438,6 +439,49 @@ class UserController extends Controller
     
 
     return view('chat',compact('user_id', 'name', 'opponent_id', 'opponent_name', 'message'));
+  }
+
+  public function imagelike(Request $request){
+    $image_id   = $request->get('image_id');
+    $user_id    = $request->get('user_id');
+
+    $imageliked = Imagelike::where('image_id', '=', $image_id)->where('user_id', '=', $user_id)->first();
+    if (is_null($imageliked)) {
+      $imageliked = Imagelike::create([
+        'image_id' => $image_id,
+        'user_id'  => $user_id,
+        'like_status' => 1
+      ]);
+    }
+
+    $likedimage = Userimage::where('id', '=', $image_id)->first();
+    $likedimage->likes = $likedimage->likes + 1;
+    $likedimage->save();
+
+    return response()->json([
+       'status' => 'success',
+       'result' => $imageliked
+       ]); 
+
+  }
+
+  public function imageliked(Request $request){
+    $image_id   = $request->get('image_id');
+    $user_id    = $request->get('user_id');
+
+    $imageliked = Imagelike::where('image_id', '=', $image_id)->where('user_id', '=', $user_id)->first();
+
+    if (!is_null($imageliked)){
+      return response()->json([
+       'status' => 'success',
+       'liked' => 1
+       ]);
+    } else {
+      return response()->json([
+       'status' => 'success',
+       'liked' => 0
+       ]);
+    }
   }
 
   public function userlike(UserlikeRequest $request){

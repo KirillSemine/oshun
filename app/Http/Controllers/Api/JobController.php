@@ -508,6 +508,23 @@ class JobController extends Controller
     
   }
 
+  public function getAllJob(Request $request){
+    $user_id = $request->get('user_id');
+    $role_id = $request->get('role_id');
+
+    if ($role_id == 2) {
+      $jobs = Job::where('from', '=', $user_id)->get();
+    } else {
+      $jobs = Job::where('to', '=', $user_id)->get();
+    }
+
+    return response()->json([
+      'status' => 'success',
+      'result' => $jobs
+    ]);
+
+  }
+
   public function userlike(UserlikeRequest $request){
 
     $token        = $request->get('token');

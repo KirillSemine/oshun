@@ -525,6 +525,20 @@ class JobController extends Controller
 
   }
 
+  public function jobAccept(Request $request){
+    $job_id = $request->get('job_id');
+    $status = $request->get('status');
+
+    $job = Job::where('id', '=', $job_id)->first();
+    $job->accept = 1;
+    $job->save();
+
+    return response()->json([
+      'status' => 'success',
+      'result' => $job
+    ]);
+  }
+
   public function userlike(UserlikeRequest $request){
 
     $token        = $request->get('token');

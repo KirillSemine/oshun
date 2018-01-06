@@ -706,6 +706,21 @@ class UserController extends Controller
       ]);  
   }
 
+  function getAllUser(Request $request){
+    $role_id = $request->get('role_id');
+    if ($role_id == 2) {
+      $users = User::select('users.*')->get();
+    } else {
+      $users = User::select('users.*')->get();
+    }
+
+    return response()->json([
+      'status' => 'success',
+      'result' => $users
+    ]);
+
+  }
+
   function searchUserlist(Request $request){
     $role_id = $request->get('role_id');
     $limit = $request->get('limit');
@@ -765,7 +780,7 @@ class UserController extends Controller
     foreach ($users as $tempuser){
       $tempuser->avatar = Voyager::image($tempuser->avatar);
     }
-    
+
     return response()->json([
       'status' => 'success',
       'result' => $users

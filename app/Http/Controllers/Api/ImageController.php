@@ -245,6 +245,10 @@ class ImageController extends Controller
 
     $images = Userimage::whereRaw("styles like '%".$style."%'")->get();
 
+    foreach ($images as $temp){
+      $temp->url = Voyager::image($temp->url);
+    }
+
     return response()->json([
       'status' => 'success',
       'result' => $images

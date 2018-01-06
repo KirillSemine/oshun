@@ -46,6 +46,7 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'Api'], function () {
   Route::post('/image/upload_image', ['as' => 'image.upload_image', 'uses' => 'ImageController@upload_image']);
   Route::get('/image/get_images', ['as' => 'image.get_images', 'uses' => 'ImageController@get_images']);
   Route::get('/image/searchimage', ['as' => 'image.searchimage', 'uses' => 'ImageController@searchimage']);
+  Route::post('/job/jobrequest', ['as' => 'job.jobrequest', 'uses' => 'JobController@jobrequest']);
 
 
   Route::post('/image/upload', ['as' => 'image.upload','uses' => 'ImageController@upload_profile']);

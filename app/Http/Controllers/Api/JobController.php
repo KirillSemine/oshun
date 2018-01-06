@@ -12,6 +12,7 @@ use App\Userimage;
 use App\Userlike;
 use App\Imagelike;
 use App\Service;
+use App\Job;
 use App\Botmessage;
 use App\Pushsetting;
 use DB;
@@ -28,7 +29,7 @@ use Tymon\JWTAuth\JWTAuth;
 use Davibennun\LaravelPushNotification\PushNotification;
 use JWTAuthException;
 
-class UserController extends Controller
+class JobController extends Controller
 {
   private $user;
   private $jwtauth;
@@ -484,6 +485,28 @@ class UserController extends Controller
        ]);
     }
   }
+  
+  public function jobrequest(Request $request){
+    $from = $request->get('user_id');
+    $to   = $request->get('opponent_id');
+    $start_time = $request->get('start_time');
+    $timeline   = $request->get('timeline');
+    $stylename  = $request->get('stylename');
+
+    $job = Job::create([
+      'from' => $from, 
+      'to'   => $to,
+      'start_time'  => $start_time,
+      'timeline'    => $timeline, 
+      'styleName'   => $stylename
+    ]);
+
+    return response()->json([
+      'status' => 'success',
+      'result' => $job
+    ]);
+    
+  }
 
   public function userlike(UserlikeRequest $request){
 
@@ -762,10 +785,6 @@ class UserController extends Controller
 
     $users = User::select('users.*')->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->whereRaw("service like '%".$service->service_id."%'")->get();
 
-    foreach ($users as $tempuser){
-      $tempuser->avatar = Voyager::image($tempuser->avatar);
-    }
-    
     return response()->json([
       'status' => 'success',
       'result' => $users

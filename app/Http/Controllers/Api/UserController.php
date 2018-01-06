@@ -714,6 +714,10 @@ class UserController extends Controller
       $users = User::select('users.*')->get();
     }
 
+    foreach ($users as $tempuser){
+      $tempuser->avatar = Voyager::image($tempuser->avatar);
+    }
+    
     return response()->json([
       'status' => 'success',
       'result' => $users

@@ -11,6 +11,7 @@ use App\User;
 use App\Userimage;
 use App\Userlike;
 use App\Imagelike;
+use App\Userrelation;
 use App\Service;
 use App\Botmessage;
 use App\Pushsetting;
@@ -485,6 +486,74 @@ class UserController extends Controller
     }
   }
 
+  public function favouriteuser(Request $request){
+    $user_id = $request->get('user_id');
+    $opponent_id = $request->get('opponent_id');
+
+    $relation = Userrelation::where('user_id', '=', $user_id)->where('opponent_id', '=', $opponent_id)->first();
+
+    if (is_null($relation)) {
+      $relation = Userrelation::create([
+        'user_id' => $user_id,
+        'opponent_id' => $opponent_id,
+        'favourite_status' => 1,
+        'matched' => 0
+      ]);
+    } else {
+      $relation->favourite_status = 1;
+      $relation->save();
+    }
+
+    return response()->json([
+       'status' => 'success',
+       'result' => $relation
+       ]); 
+
+  }
+
+  public function contactrequest(Request $request){
+    $user_id = $request->get('user_id');
+    $opponent_id = $request->get('opponent_id');
+
+    //send notification to opponent user
+  }
+
+  public function contactaccept(Request $request){
+    $user_id = $request->get('user_id');
+    $opponent_id = $request->get('opponent_id');
+
+    $relation = Userrelation::where('user_id', '=', $user_id)->where('opponent_id', '=', $opponent_id)->first();
+    if (!is_null($relation)) {
+      $relation->matched = 1;
+      $relation->save();
+    } else {
+      $relation = Userrelation::create([
+        'user_id' => $user_id,
+        'opponent_id' => $opponent_id,
+        'favourite_status' => 0,
+        'matched' => 1
+      ]);
+    }
+
+    $opponetrelation = Userrelation::where('user_id', '=', $opponent_id)->where('opponent_id', '=', $user_id)->first();
+
+    if (!is_null($opponetrelation)) {
+      $opponetrelation->matched = 1;
+      $opponetrelation->save();
+    } else {
+      $opponetrelation = Userrelation::create([
+        'user_id' => $opponent_id,
+        'opponent_id' => $user_id,
+        'favourite_status' => 0,
+        'matched' => 1
+      ]);
+    }
+
+    return response()->json([
+       'status' => 'success',
+       ]);
+  }
+
   public function userlike(UserlikeRequest $request){
 
     $token        = $request->get('token');
@@ -717,12 +786,24 @@ class UserController extends Controller
     foreach ($users as $tempuser){
       $tempuser->avatar = Voyager::image($tempuser->avatar);
     }
-    
+
     return response()->json([
       'status' => 'success',
       'result' => $users
     ]);
 
+  }
+
+  function getuser(Request $request){
+    $user_id = $request->get('user_id');
+    $user = User::where('id', '=', $user_id)->first();
+
+    $user->avatar = Voyager::image($user->avatar);
+
+    return response()->json([
+      'status' => 'success',
+      'result' => $user
+    ]);
   }
 
   function searchUserlist(Request $request){

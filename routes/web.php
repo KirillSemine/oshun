@@ -43,6 +43,10 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'Api'], function () {
   Route::post('/user/imageliked', ['as' => 'user.imageliked', 'uses' => 'UserController@imageliked']);
   Route::get('/user/searchstylelist', ['as' => 'user.searchstylelist', 'uses' => 'UserController@searchstylelist']);
   Route::get('/user/getAllUser', ['as' => 'user.getAllUser', 'uses' => 'UserController@getAllUser']);
+  Route::get('/user/getuser', ['as' => 'user.getuser', 'uses' => 'UserController@getuser']);
+  Route::post('/user/favouriteuser', ['as' => 'user.favouriteuser', 'uses' => 'UserController@favouriteuser']);
+  Route::post('/user/contactaccept', ['as' => 'user.contactaccept', 'uses' => 'UserController@contactaccept']);
+  Route::post('/user/contactrequest', ['as' => 'user.contactrequest', 'uses' => 'UserController@contactrequest']);
   Route::post('/image/uploadprofileImage', ['as' => 'image.uploadprofileImage', 'uses' => 'ImageController@update_proilfeImage']);
   Route::post('/image/upload_image', ['as' => 'image.upload_image', 'uses' => 'ImageController@upload_image']);
   Route::get('/image/get_images', ['as' => 'image.get_images', 'uses' => 'ImageController@get_images']);
@@ -50,6 +54,7 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'Api'], function () {
   Route::post('/job/jobrequest', ['as' => 'job.jobrequest', 'uses' => 'JobController@jobrequest']);
   Route::get('/job/getAllJob', ['as' => 'job.getAllJob', 'uses' => 'JobController@getAllJob']);
   Route::post('/job/jobAccept', ['as' => 'job.jobAccept', 'uses' => 'JobController@jobAccept']);
+  Route::post('/job/jobEnd', ['as' => 'job.jobEnd', 'uses' => 'JobController@jobEnd']);
 
 
   Route::post('/image/upload', ['as' => 'image.upload','uses' => 'ImageController@upload_profile']);

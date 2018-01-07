@@ -554,6 +554,47 @@ class UserController extends Controller
        ]);
   }
 
+  public function getcontacteduser(Request $request){
+    $user_id = $request->get('user_id');
+
+    $contacts = Userrelation::where('user_id', '=', $user_id)->where('matched', '=', 1)->get();
+
+    $users = array();
+
+    foreach ($contacts as $contact) {
+      $user = User::where('id', '=', $contact->opponent_id)->first();
+      array_push($users, $user);
+    }
+
+    foreach ($users as $tempuser){
+      $tempuser->avatar = Voyager::image($tempuser->avatar);
+    }
+
+    return response()->json([
+       'status' => 'success',
+       'result' => $users
+       ]); 
+  }
+
+  public function contacted(Request $request){
+    $user_id = $request->get('user_id');
+    $opponent_id = $request->get('opponent_id');
+
+    $contact = Userrelation::where('user_id', '=', $user_id)->where('opponent_id', '=', $opponent_id)->first();
+
+    if (!is_null($contact)) {
+      return response()->json([
+       'status' => 'success',
+       'result' => $contact
+       ]); 
+    } else {
+      return response()->json([
+       'status' => 'failed',
+       'result' => 'no connection'
+       ]); 
+    }
+  }
+
   public function userlike(UserlikeRequest $request){
 
     $token        = $request->get('token');

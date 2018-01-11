@@ -516,6 +516,11 @@ class UserController extends Controller
     $opponent_id = $request->get('opponent_id');
 
     //send notification to opponent user
+
+
+    return response()->json([
+       'status' => 'success',
+       ]); 
   }
 
   public function contactaccept(Request $request){
@@ -891,17 +896,29 @@ class UserController extends Controller
                      + sin(radians($latitude)) 
                      * sin(radians(`latitude`))))";
 
-    $service = Service::where('styleName', '=', $style)->first();
+    $services = Service::where('styleName', '=', $style)->get();
 
 
-    if (is_null($service)) {
+    if (is_null($services)) {
       return response()->json([
       'status' => 'failed',
       'result' => 'style error'
     ]);
     }
 
-    $users = User::select('users.*')->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->whereRaw("service like '%".$service->service_id."%'")->get();
+    $users = array();
+    $query = "service like '%".$services[0]->service_id."%'";
+    for ($i=0; $i < count($services); $i++) { 
+      $query = $query." or service like '%".$services[$i]->service_id."%'";
+    }/*
+    foreach ($services as $service) {
+      $users1 = User::select('users.*')->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->whereRaw("service like '%".$service->service_id."%'")->get();
+      $users = array_merge($users, $users1);
+    }*/
+    
+      $users = User::select('users.*')->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->whereRaw($query)->get();
+
+
 
     foreach ($users as $tempuser){
       $tempuser->avatar = Voyager::image($tempuser->avatar);

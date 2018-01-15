@@ -176,6 +176,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Oureastudios\Laravel\BraintreeServiceProvider::class,
+
     	TCG\Voyager\VoyagerServiceProvider::class,
     	Intervention\Image\ImageServiceProvider::class,
 

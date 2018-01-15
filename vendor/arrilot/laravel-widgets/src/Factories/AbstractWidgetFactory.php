@@ -4,6 +4,7 @@ namespace Arrilot\Widgets\Factories;
 
 use Arrilot\Widgets\AbstractWidget;
 use Arrilot\Widgets\Contracts\ApplicationWrapperContract;
+use Arrilot\Widgets\Misc\EncryptException;
 use Arrilot\Widgets\Misc\InvalidWidgetClassException;
 use Arrilot\Widgets\Misc\ViewExpressionTrait;
 use Arrilot\Widgets\WidgetId;
@@ -69,6 +70,13 @@ abstract class AbstractWidgetFactory
     public static $skipWidgetContainer = false;
 
     /**
+     * The flag for not wrapping content in a special container.
+     *
+     * @var bool
+     */
+    public static $allowOnlyWidgetsWithDisabledEncryption = false;
+
+    /**
      * Constructor.
      *
      * @param ApplicationWrapperContract $app
@@ -101,6 +109,7 @@ abstract class AbstractWidgetFactory
      * @param $params
      *
      * @throws InvalidWidgetClassException
+     * @throws EncryptException
      */
     protected function instantiateWidget(array $params = [])
     {
@@ -116,11 +125,19 @@ abstract class AbstractWidgetFactory
         $fqcn = $rootNamespace.'\\'.$this->widgetName;
         $widgetClass = class_exists($fqcn) ? $fqcn : $this->widgetName;
 
+        if (!class_exists($widgetClass)) {
+            throw new InvalidWidgetClassException('Class "'.$widgetClass.'" does not exist');
+        }
+
         if (!is_subclass_of($widgetClass, 'Arrilot\Widgets\AbstractWidget')) {
             throw new InvalidWidgetClassException('Class "'.$widgetClass.'" must extend "Arrilot\Widgets\AbstractWidget" class');
         }
 
         $this->widget = new $widgetClass($this->widgetConfig);
+
+        if (static::$allowOnlyWidgetsWithDisabledEncryption && $this->widget->encryptParams) {
+            throw new EncryptException('Widget "'.$widgetClass.'" was not called properly');
+        }
     }
 
     /**
@@ -132,7 +149,7 @@ abstract class AbstractWidgetFactory
      */
     protected function parseFullWidgetNameFromString($widgetName)
     {
-        return studly_case(str_replace('.', '\\', $widgetName));
+        return studly_case(str_replace('.', '\\_', $widgetName));
     }
 
     /**
@@ -159,13 +176,13 @@ abstract class AbstractWidgetFactory
     /**
      * Encrypt widget params to be transported via HTTP.
      *
-     * @param array $params
+     * @param string $params
      *
      * @return string
      */
     public function encryptWidgetParams($params)
     {
-        return $this->app->make('encrypter')->encrypt(json_encode($params));
+        return $this->app->make('encrypter')->encrypt($params);
     }
 
     /**
@@ -173,12 +190,10 @@ abstract class AbstractWidgetFactory
      *
      * @param string $params
      *
-     * @return array
+     * @return string
      */
     public function decryptWidgetParams($params)
     {
-        $params = json_decode($this->app->make('encrypter')->decrypt($params), true);
-
-        return $params ? $params : [];
+        return $this->app->make('encrypter')->decrypt($params);
     }
 }

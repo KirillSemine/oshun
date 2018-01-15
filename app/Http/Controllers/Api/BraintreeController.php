@@ -26,10 +26,14 @@ use Braintree_WebhookNotification;
 use Braintree_Subscription;
 use Braintree_CreditCard;
 use Braintree_ClientToken;
+use Braintree_Configuration;
 
 class BraintreeController extends Controller {
 
+  
+
   public function __construct() {
+
   }
 
   public function addOrder()

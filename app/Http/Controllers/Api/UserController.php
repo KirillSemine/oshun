@@ -15,6 +15,7 @@ use App\Userrelation;
 use App\Service;
 use App\Botmessage;
 use App\Pushsetting;
+use App\Purchase;
 use DB;
 
 use App\Http\Requests;
@@ -600,6 +601,37 @@ class UserController extends Controller
     }
   }
 
+  public function getkeyandprice(Request $request){
+    $citystates = $request->get('states');
+
+    $pricetype = DB::table('citystates')->where('cityname', '=', $citystates)->first();
+    $prices = DB::table('pricetable')->select('type', 'price')->where('states', '=', $pricetype->pricetype)->get();
+
+    $services = Service::orderBy('style_id')->get();
+
+    return response()->json([
+       'status' => 'success',
+       'price' => $prices,
+       'services' => $services
+       ]); 
+  }
+
+  public function purchase(Request $request){
+    $user_id = $request->get('user_id');
+    $style_id = $request->get('style_id');
+
+    $result = Purchase::create([
+          'user_id'     => $user_id,
+          'style_id' => $style_id
+    ]);
+
+    return response()->json([
+       'status' => 'success',
+       'result' => $result
+       ]); 
+
+  }
+
   public function userlike(UserlikeRequest $request){
 
     $token        = $request->get('token');
@@ -884,7 +916,7 @@ class UserController extends Controller
     ]);
   }
 
-  function searchstylelist(Request $request){
+  function searchstylelist_________1(Request $request){
     $latitude = $request->get('latitude');
     $longitude = $request->get('longitude');
     $style = $request->get('style');
@@ -927,6 +959,62 @@ class UserController extends Controller
     return response()->json([
       'status' => 'success',
       'result' => $users
+    ]);
+  }
+
+  function searchstylelist(Request $request){
+    $latitude = $request->get('latitude');
+    $longitude = $request->get('longitude');
+    $style = $request->get('style');
+
+    $haversine = "(6371 * acos(cos(radians($latitude)) 
+                     * cos(radians(`latitude`)) 
+                     * cos(radians(`longitude`) 
+                     - radians($longitude)) 
+                     + sin(radians($latitude)) 
+                     * sin(radians(`latitude`))))";
+
+    $services = Service::where('styleName', '=', $style)->get();
+
+
+    if (is_null($services)) {
+      return response()->json([
+      'status' => 'failed',
+      'result' => 'style error'
+    ]);
+    }
+
+    $users = array();
+    $query = "service like '%".$services[0]->service_id."%'";
+    for ($i=0; $i < count($services); $i++) { 
+      $query = $query." or service like '%".$services[$i]->service_id."%'";
+    }
+    $query1 = "purchases.style_id like '%".$services[0]->style_id."%'";
+    for ($i=0; $i < count($services); $i++) { 
+      $query1 = $query1." or purchases.style_id like '%".$services[$i]->style_id."%'";
+    }
+    /*
+    foreach ($services as $service) {
+      $users1 = User::select('users.*')->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->whereRaw("service like '%".$service->service_id."%'")->get();
+      $users = array_merge($users, $users1);
+    }*/
+    
+      $users = User::select('users.*', 'purchases.style_id')->join('purchases', function($Join) use ($services){
+        $Join->on('users.id', '=', 'purchases.user_id')->where('purchases.style_id', '=', $services[0]->style_id);
+      })->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->whereRaw($query)->whereRaw($query1)->get();
+      // $users = User::select('users.*', 'purchases.style_id')->join('purchases', 'users.id', '=', 'purchases.user_id')->where('purchases.style_id', '=', $services[0]->style_id)->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->whereRaw($query)->whereRaw($query1)->get();
+
+
+// ->where('style_id', '=', $services[0]->style_id)
+
+    foreach ($users as $tempuser){
+      $tempuser->avatar = Voyager::image($tempuser->avatar);
+    }
+
+    return response()->json([
+      'status' => 'success',
+      'result' => $users,
+      'style' => $query1
     ]);
   }
 

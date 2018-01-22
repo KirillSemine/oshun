@@ -91,20 +91,20 @@ echo $errorFound ;
 
 public function getCardToken($customer_id,$cardNumber,$cardExpiry,$cardCVC)
 {
-$card_result = Braintree_CreditCard::create(array(
-//'cardholderName' => mysql_real_escape_string($_POST['full_name']),
-'number' => $cardNumber,
-'expirationDate' => trim($cardExpiry),
-'customerId' => $customer_id,
-'cvv' => $cardCVC
-));
-if($card_result->success)
-{
-return $card_result->creditCard->token;
-}
-else {
-return false;
-}
+  $card_result = Braintree_CreditCard::create(array(
+  //'cardholderName' => mysql_real_escape_string($_POST['full_name']),
+  'number' => $cardNumber,
+  'expirationDate' => trim($cardExpiry),
+  'customerId' => $customer_id,
+  'cvv' => $cardCVC
+  ));
+  if($card_result->success)
+  {
+    return $card_result->creditCard->token;
+  }
+  else {
+    return false;
+  }
 }
  
 

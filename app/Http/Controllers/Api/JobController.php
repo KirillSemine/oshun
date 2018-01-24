@@ -55,6 +55,13 @@ class JobController extends Controller
       'styleName'   => $stylename
     ]);
 
+    $user = User::where('id', '=', $from)->first();
+    $oppoentuser = User::where('id', '=', $to)->first();
+
+    PushNotification::app('Oshun')
+                      ->to($oppoentuser->device_token)
+                      ->send($user->name.' has awarded you for.');
+
     return response()->json([
       'status' => 'success',
       'result' => $job
@@ -86,6 +93,14 @@ class JobController extends Controller
     $job = Job::where('id', '=', $job_id)->first();
     $job->accept = 1;
     $job->save();
+
+    $user = User::where('id', '=', $job->from)->first();
+    $oppoentuser = User::where('id', '=', $job->to)->first();
+
+
+    PushNotification::app('Oshun')
+                      ->to($user->device_token)
+                      ->send($oppoentuser->name.' accepted your offer.');
 
     return response()->json([
       'status' => 'success',

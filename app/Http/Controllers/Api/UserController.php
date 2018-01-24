@@ -71,7 +71,7 @@ class UserController extends Controller
       $latitude = $request->get('latitude');
       $longitude = $request->get('longitude');
       // $interesting = $request->get('interesting');
-      // $device_token = $request->get('device_token');
+      $device_token = $request->get('device_token');
 
       $newUser = User::where('email', '=', $email)->first();
 
@@ -92,7 +92,7 @@ class UserController extends Controller
           'latitude'  => $latitude,
           'longitude' => $longitude,
           // 'interesting' => $interesting,
-          // 'device_token' => $device_token
+          'device_token' => $device_token
           
         ]);
 
@@ -271,6 +271,7 @@ class UserController extends Controller
 	  $credentials = $request->only('email');
     $credentials['password'] = $request->get('password');
 	  $token = null;
+    $device_token = $request->get('device_token');
 	  try {
 	    $token = $this->jwtauth->attempt($credentials);    
 	    if (!$token) {
@@ -285,6 +286,7 @@ class UserController extends Controller
 	  }
     $this->user = $this->jwtauth->toUser($token);
     $this->user->app_token = $token;
+    $this->user->device_token = $device_token;
     $this->user->save();
 
     $images = Userimage::where('user_id', '=', $this->user->id)->get();

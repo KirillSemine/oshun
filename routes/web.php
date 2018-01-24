@@ -63,7 +63,7 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'Api'], function () {
   Route::post('/job/jobEnd', ['as' => 'job.jobEnd', 'uses' => 'JobController@jobEnd']);
 
   Route::get('/braintree/getClientToken', ['as' => 'braintree.getClientToken', 'uses' => 'BraintreeController@getClientToken']);
-  Route::get('/braintree/getTransiction', ['as' => 'braintree.getTransiction', 'uses' => 'BraintreeController@getTransiction']);
+  Route::get('/braintree/getTransaction', ['as' => 'braintree.getTransaction', 'uses' => 'BraintreeController@getTransaction']);
 
 
   Route::post('/image/upload', ['as' => 'image.upload','uses' => 'ImageController@upload_profile']);

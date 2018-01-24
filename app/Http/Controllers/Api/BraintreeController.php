@@ -58,10 +58,11 @@ public function getClientToken(){
   return Braintree_ClientToken::generate();
 }
 
-public function getTransiction(Request $request){
+public function getTransaction(Request $request){
   $nonceFromTheClient = $request->get('nonce');
+  $amount = $request->get('amount')
   $result = Braintree_Transaction::sale([
-  'amount' => '10.00',
+  'amount' => $amount,
   'paymentMethodNonce' => $nonceFromTheClient,
   'options' => [
     'submitForSettlement' => True

@@ -519,6 +519,11 @@ class UserController extends Controller
     $opponent_id = $request->get('opponent_id');
 
     //send notification to opponent user
+    $user = User::where('id', '=', $user_id)->first();
+    $oppoentuser = User::where('id', '=', $opponent_id)->first();
+    PushNotification::app('Oshun')
+                      ->to($oppoentuser->device_token)
+                      ->send($user->name.' would like to contact with you.');
 
 
     return response()->json([

@@ -55,22 +55,24 @@ class BraintreeController extends Controller {
   }
  
 public function getClientToken(){
-  return Braintree_ClientToken::generate();
+  $clientToken = Braintree_ClientToken::generate();
+  return $clientToken;
 }
 
 public function getTransaction(Request $request){
   $nonceFromTheClient = $request->get('nonce');
-  $amount = $request->get('amount')
+  $amount = $request->get('amount');
   $result = Braintree_Transaction::sale([
   'amount' => $amount,
   'paymentMethodNonce' => $nonceFromTheClient,
   'options' => [
     'submitForSettlement' => True
   ]
-]);
+  ]);
 
   return $result;
 }
+
 public function registerUserOnBrainTree() {
 $result = Braintree_Customer::create(array(
 'firstName' => 'Saurabh',

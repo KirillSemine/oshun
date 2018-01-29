@@ -69,6 +69,47 @@ class JobController extends Controller
     
   }
 
+  public function jobedit(Request $request){
+    $job_id = $request->get('job_id');
+    $from = $request->get('user_id');
+    $to   = $request->get('opponent_id');
+    $start_time = $request->get('start_time');
+    $timeline   = $request->get('timeline');
+    $stylename  = $request->get('stylename');
+
+
+    $job = Job::where('id', '=', $job_id)->first();
+    $job->start_time = $start_time;
+    $job->timeline = $timeline;
+    $job->styleName = $stylename;
+    $job->save();
+
+    return response()->json([
+      'status' => 'success',
+      'result' => $job
+    ]);
+  }
+
+  public function jobdelete(Request $request){
+    $job_id = $request->get('job_id');
+    $job = Job::where('id', '=', $job_id)->first();
+
+    if (!is_null($job)) {
+      Job::where('id', '=', $job_id)->delete();
+
+      return response()->json([
+      'status' => 'success',
+      'result' => 'job deleted'
+      ]);
+    } else {
+      return response()->json([
+      'status' => 'failed',
+      'result' => 'no job'
+      ]);
+    }
+
+  }
+
   public function getAllJob(Request $request){
     $user_id = $request->get('user_id');
     $role_id = $request->get('role_id');
@@ -93,7 +134,7 @@ class JobController extends Controller
     $job = Job::where('id', '=', $job_id)->first();
     $job->accept = 1;
     $job->save();
-
+    
     $user = User::where('id', '=', $job->from)->first();
     $oppoentuser = User::where('id', '=', $job->to)->first();
 

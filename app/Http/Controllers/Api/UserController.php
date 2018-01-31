@@ -1011,6 +1011,9 @@ class UserController extends Controller
       })->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->whereRaw($query)->whereRaw($query1)->get();
       // $users = User::select('users.*', 'purchases.style_id')->join('purchases', 'users.id', '=', 'purchases.user_id')->where('purchases.style_id', '=', $services[0]->style_id)->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->whereRaw($query)->whereRaw($query1)->get();
 
+      $users2 = User::select('users.*')->selectRaw("{$haversine} AS distance")->havingRaw('distance < 35*1.609344')->whereRaw($query)->get();
+
+      $users = $users->merge($users2);
 
 // ->where('style_id', '=', $services[0]->style_id)
 

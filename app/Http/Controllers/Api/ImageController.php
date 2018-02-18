@@ -188,7 +188,10 @@ class ImageController extends Controller
     $resizeWidth = 1800;
     $resizeHeight = null;
 
+    
+
     $user_id = $request->get('user_id');
+    ini_set('memory_limit','256M');
     $file = $request->file('image');
     $styles = $request->get('style');
     $description = $request->get('description');
@@ -200,13 +203,13 @@ class ImageController extends Controller
     $fullPath = 'users/'.$user_id.'/'.$filename.'.'.$file->getClientOriginalExtension();
     $ext = $file->guessClientExtension();
 
-    $image = Image::make($file)->resize($resizeWidth, $resizeHeight, function(Constraint $constraint){
-      $constraint->aspectRatio();
-      $constraint->upsize();
-    })->encode($file->getClientOriginalExtension(), 75);
+    // $image = Image::make($file)->resize($resizeWidth, $resizeHeight, function(Constraint $constraint){
+    //   $constraint->aspectRatio();
+    //   $constraint->upsize();
+    // })->encode($file->getClientOriginalExtension(), 75);
 
     //move uploaded file from temp to uploads directory
-    if(Storage::disk(config('voyager.storage.disk'))->put($fullPath, (string) $image, 'public')){
+    if(Storage::disk(config('voyager.storage.disk'))->put($fullPath, (string) $file, 'public')){
       $status = 'Image successfully uploaded!';
       $fullFilename = $fullPath;
     } else {
@@ -216,6 +219,18 @@ class ImageController extends Controller
         'error' => $status
       ]); 
     }
+
+    // if(Storage::disk(config('voyager.storage.disk'))->put($fullPath, (string) $image, 'public')){
+    //   $status = 'Image successfully uploaded!';
+    //   $fullFilename = $fullPath;
+    // } else {
+    //   $status = 'Upload Fail: Unknown error occurred!';
+    //   return response()->json([
+    //     'status' => 'error',
+    //     'error' => $status
+    //   ]); 
+    // }
+
     $newImage = $this->userimage->create([
       'user_id' => $user_id,
       'url' => $fullPath,

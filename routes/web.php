@@ -52,6 +52,8 @@ Route::group(['prefix' => 'api/v1', 'namespace' => 'Api'], function () {
   Route::get('/user/getkeyandprice', ['as' => 'user.getkeyandprice', 'uses' => 'UserController@getkeyandprice']);
   Route::post('/user/purchase', ['as' => 'user.purchase', 'uses' => 'UserController@purchase']);
 
+  Route::post('/user/sendMail', ['as' => 'user.sendMail', 'uses' => 'UserController@sendMail']);
+
   Route::post('/image/uploadprofileImage', ['as' => 'image.uploadprofileImage', 'uses' => 'ImageController@update_proilfeImage']);
   Route::post('/image/upload_image', ['as' => 'image.upload_image', 'uses' => 'ImageController@upload_image']);
   Route::get('/image/get_images', ['as' => 'image.get_images', 'uses' => 'ImageController@get_images']);

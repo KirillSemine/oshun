@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use DateTime;
 use Carbon\Carbon;
 
+use Mail;
 use App\User;
 use App\Userimage;
 use App\Userlike;
@@ -1088,6 +1089,35 @@ class UserController extends Controller
     } else {
         return $miles;
     }
+  }
+
+  function sendMail(Request $request){
+    
+    $to = $request->get('to');
+    $subject = $request->get('subject');
+    $text = $request->get('text');
+    $attach = $request->file('file');
+        Mail::send([], [], function($message) use ($to, $subject, $text, $attach) {
+            $message->from('kirill.semine@gmail.com');
+            $message->to($to);
+            $message->subject($subject);
+            $message->setBody($text, 'text/html');
+
+
+            if (file_exists($attach)) {
+              $message->attach($attach->getRealPath(), [
+              'as' => $attach->getClientOriginalName(), 
+              'mime' => $attach->getMimeType()
+              ]);
+            }
+        });
+    // Mail::send(['text.vido'],['data' => $data] ,  function($message) {
+    //   $message->from('use@example.com', 'Laravel');
+    //   $message->to('geomeno82@outlook.com')->subject('testmessage');
+    // });
+    return response()->json([
+      'result' => $attach
+    ]);
   }
 
 

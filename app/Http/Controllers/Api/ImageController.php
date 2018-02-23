@@ -209,16 +209,18 @@ class ImageController extends Controller
     // })->encode($file->getClientOriginalExtension(), 75);
 
     //move uploaded file from temp to uploads directory
-    if(Storage::disk(config('voyager.storage.disk'))->put($fullPath, (string) $file, 'public')){
-      $status = 'Image successfully uploaded!';
-      $fullFilename = $fullPath;
-    } else {
-      $status = 'Upload Fail: Unknown error occurred!';
-      return response()->json([
-        'status' => 'error',
-        'error' => $status
-      ]); 
-    }
+    // if(Storage::disk(config('voyager.storage.disk'))->put($fullPath, $filename, 'public')){
+    //   $status = 'Image successfully uploaded!';
+    //   $fullFilename = $fullPath;
+    // } else {
+    //   $status = 'Upload Fail: Unknown error occurred!';
+    //   return response()->json([
+    //     'status' => 'error',
+    //     'error' => $status
+    //   ]); 
+    // }
+
+    $file->move($fullPath, $filename);
 
     // if(Storage::disk(config('voyager.storage.disk'))->put($fullPath, (string) $image, 'public')){
     //   $status = 'Image successfully uploaded!';

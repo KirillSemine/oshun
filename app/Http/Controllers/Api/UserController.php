@@ -1096,27 +1096,42 @@ class UserController extends Controller
     $to = $request->get('to');
     $subject = $request->get('subject');
     $text = $request->get('text');
-    $attach = $request->file('file');
-        Mail::send([], [], function($message) use ($to, $subject, $text, $attach) {
+    // $attach = $request->file('file');
+    // dd($attach);
+
+    // $index = 0;
+    // foreach($request->file('file') as $attach) {
+    //     dd($attach);
+    // }
+    // $attach1 = $request->file('file');
+    
+    // $attach = 0;
+    
+        Mail::send([], [], function($message) use ($to, $subject, $text, $request) {
             $message->from('kirill.semine@gmail.com');
             $message->to($to);
             $message->subject($subject);
             $message->setBody($text, 'text/html');
 
 
-            if (file_exists($attach)) {
-              $message->attach($attach->getRealPath(), [
-              'as' => $attach->getClientOriginalName(), 
-              'mime' => $attach->getMimeType()
-              ]);
-            }
-        });
-    // Mail::send(['text.vido'],['data' => $data] ,  function($message) {
-    //   $message->from('use@example.com', 'Laravel');
-    //   $message->to('geomeno82@outlook.com')->subject('testmessage');
-    // });
+
+
+            // if (file_exists($attach)) {
+              // $index = 1;
+              foreach($request->file('file') as $attach) {
+                
+                  $message->attach($attach->getRealPath(), [
+                  'as' => $attach->getClientOriginalName(), 
+                  'mime' => $attach->getMimeType()
+                  ]);
+              }
+              
+            // }
+        }, true);
+    
     return response()->json([
-      'result' => $attach
+      'number' => $request->file('file')
+      // 'result' => $attachment->getClientOriginalName()
     ]);
   }
 

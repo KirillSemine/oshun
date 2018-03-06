@@ -156,10 +156,10 @@ class JobController extends Controller
     $oppoentuser = User::where('id', '=', $job->to)->first();
 
 
-    $pos = strpos($oppoentuser->device_token, ':');
+    $pos = strpos($user->device_token, ':');
     if ($pos === false){
       PushNotification::app('Oshun')
-                      ->to($oppoentuser->device_token)
+                      ->to($user->device_token)
                       ->send($oppoentuser->name.' accepted your offer');
     } else {
       UserController::AndroidPushNotification($user->device_token , 'JobAccept', $oppoentuser->name.' accepted your offer');

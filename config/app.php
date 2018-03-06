@@ -184,6 +184,8 @@ return [
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider::class,
 
+        LaravelFCM\FCMServiceProvider::class,
+
     ],
 
     /*
@@ -235,6 +237,8 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => \Tymon\JWTAuth\Facades\JWTFactory::class,
 
+        'FCM'      => LaravelFCM\Facades\FCM::class,
+        'FCMGroup' => LaravelFCM\Facades\FCMGroup::class, // Optional
 
     ],
 

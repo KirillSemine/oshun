@@ -31,6 +31,11 @@ use Tymon\JWTAuth\JWTAuth;
 use Davibennun\LaravelPushNotification\PushNotification;
 use JWTAuthException;
 
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
+use FCM;
+
 class UserController extends Controller
 {
   private $user;
@@ -522,9 +527,15 @@ class UserController extends Controller
     //send notification to opponent user
     $user = User::where('id', '=', $user_id)->first();
     $oppoentuser = User::where('id', '=', $opponent_id)->first();
-    PushNotification::app('Oshun')
+    $pos = strpos($oppoentuser->device_token, ':');
+    if ($pos === false){
+      PushNotification::app('Oshun')
                       ->to($oppoentuser->device_token)
                       ->send($user->name.' would like to contact with you.');
+    } else {
+      UserController::AndroidPushNotification($oppoentuser->device_token, 'ContactRequest', $user->name.' would like to contact with you.');
+    }
+    
 
 
     return response()->json([
@@ -561,6 +572,17 @@ class UserController extends Controller
         'favourite_status' => 0,
         'matched' => 1
       ]);
+    }
+
+    $user = User::where('id', '=', $user_id)->first();
+    $oppoentuser = User::where('id', '=', $opponent_id)->first();
+    $pos = strpos($oppoentuser->device_token, ':');
+    if ($pos === false){
+      PushNotification::app('Oshun')
+                      ->to($oppoentuser->device_token)
+                      ->send($user->name.' accepted your contact request.');
+    } else {
+      UserController::AndroidPushNotification($oppoentuser->device_token, 'ContactAccept', $user->name.' accepted your contact request.');
     }
 
     return response()->json([
@@ -1132,6 +1154,42 @@ class UserController extends Controller
       // 'number' => $request->file('file')
       // 'result' => $attachment->getClientOriginalName()
     ]);
+  }
+
+  public static function AndroidPushNotification($device_token, $title, $body){
+    $optionBuilder = new OptionsBuilder();
+    $optionBuilder->setTimeToLive(60*20);
+
+    $notificationBuilder = new PayloadNotificationBuilder($title);
+    $notificationBuilder->setBody($body)
+            ->setSound('default');
+
+    $dataBuilder = new PayloadDataBuilder();
+    $dataBuilder->addData(['a_data' => 'my_data']);
+
+    $option = $optionBuilder->build();
+    $notification = $notificationBuilder->build();
+    $data = $dataBuilder->build();
+
+    $token = $device_token;
+
+    $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
+
+    $downstreamResponse->numberSuccess();
+    $downstreamResponse->numberFailure();
+    $downstreamResponse->numberModification();
+
+    //return Array - you must remove all this tokens in your database
+    $downstreamResponse->tokensToDelete();
+
+    //return Array (key : oldToken, value : new token - you must change the token in your database )
+    $downstreamResponse->tokensToModify();
+
+    //return Array - you should try to resend the message to the tokens in the array
+    $downstreamResponse->tokensToRetry();
+
+    // return Array (key:token, value:errror) - in production you should remove from your database the tokens
+
   }
 
 

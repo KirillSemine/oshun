@@ -58,9 +58,14 @@ class JobController extends Controller
     $user = User::where('id', '=', $from)->first();
     $oppoentuser = User::where('id', '=', $to)->first();
 
-    PushNotification::app('Oshun')
+    $pos = strpos($oppoentuser->device_token, ':');
+    if ($pos === false){
+      PushNotification::app('Oshun')
                       ->to($oppoentuser->device_token)
-                      ->send($user->name.' has awarded you for.');
+                      ->send($user->name.' has awarded you for '.$job->id.'.');
+    } else {
+      UserController::AndroidPushNotification($oppoentuser->device_token, 'JobRequest', $user->name.' has awarded you for '.$job->id.'.');
+    }
 
     return response()->json([
       'status' => 'success',
@@ -83,6 +88,18 @@ class JobController extends Controller
     $job->timeline = $timeline;
     $job->styleName = $stylename;
     $job->save();
+
+    $user = User::where('id', '=', $from)->first();
+    $oppoentuser = User::where('id', '=', $to)->first();
+
+    $pos = strpos($oppoentuser->device_token, ':');
+    if ($pos === false){
+      PushNotification::app('Oshun')
+                      ->to($oppoentuser->device_token)
+                      ->send($user->name.' edited job '.$job_id.'.');
+    } else {
+      UserController::AndroidPushNotification($oppoentuser->device_token, 'JobEdit', $user->name.' edited job '.$job_id.'.');
+    }
 
     return response()->json([
       'status' => 'success',
@@ -139,9 +156,15 @@ class JobController extends Controller
     $oppoentuser = User::where('id', '=', $job->to)->first();
 
 
-    PushNotification::app('Oshun')
-                      ->to($user->device_token)
-                      ->send($oppoentuser->name.' accepted your offer.');
+    $pos = strpos($oppoentuser->device_token, ':');
+    if ($pos === false){
+      PushNotification::app('Oshun')
+                      ->to($oppoentuser->device_token)
+                      ->send($user->name.' edited job '.$job_id.'.');
+    } else {
+      UserController::AndroidPushNotification($user->device_token , 'JobAccept', $oppoentuser->name.' accepted your offer.');
+    }
+
 
     return response()->json([
       'status' => 'success',

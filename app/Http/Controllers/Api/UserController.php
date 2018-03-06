@@ -1096,10 +1096,10 @@ class UserController extends Controller
     $to = $request->get('to');
     $subject = $request->get('subject');
     $text = $request->get('text');
-    // $attach = $request->file('file');
-    // dd($attach);
+    $attachments = $request->files->all();
+    // $attach1 = $request->file('file');
+    // dd(sizeof($attach));
 
-    // $index = 0;
     // foreach($request->file('file') as $attach) {
     //     dd($attach);
     // }
@@ -1107,7 +1107,7 @@ class UserController extends Controller
     
     // $attach = 0;
     
-        Mail::send([], [], function($message) use ($to, $subject, $text, $request) {
+        Mail::send([], [], function($message) use ($to, $subject, $text, $request, $attachments) {
             $message->from('kirill.semine@gmail.com');
             $message->to($to);
             $message->subject($subject);
@@ -1117,8 +1117,7 @@ class UserController extends Controller
 
 
             // if (file_exists($attach)) {
-              // $index = 1;
-              foreach($request->file('file') as $attach) {
+              foreach($attachments as $attach) {
                 
                   $message->attach($attach->getRealPath(), [
                   'as' => $attach->getClientOriginalName(), 
@@ -1127,10 +1126,10 @@ class UserController extends Controller
               }
               
             // }
-        }, true);
+        });
     
     return response()->json([
-      'number' => $request->file('file')
+      // 'number' => $request->file('file')
       // 'result' => $attachment->getClientOriginalName()
     ]);
   }

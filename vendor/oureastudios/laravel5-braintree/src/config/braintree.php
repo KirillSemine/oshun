@@ -21,7 +21,7 @@ return [
     | Please provide your Merchant ID.
     |
     */
-	'merchantId' => '2rb85fzdhw8wyg4w',
+	'merchantId' => 'my_merchant_id',
 
 	/*
     |--------------------------------------------------------------------------
@@ -31,7 +31,7 @@ return [
     | Please provide your Public Key.
     |
     */
-	'publicKey' => 'rp52nqjdy9bvbqbr',
+	'publicKey' => 'my_public_key',
 
 	/*
     |--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ return [
     | Please provide your Private Key.
     |
     */
-	'privateKey' => '839f1f6bb67aafc136240cb066fd893b',
+	'privateKey' => 'my_private_key',
 
 	/*
     |--------------------------------------------------------------------------

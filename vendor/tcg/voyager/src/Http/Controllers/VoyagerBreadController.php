@@ -105,7 +105,6 @@ class VoyagerBreadController extends Controller
 
         // Check if BREAD is Translatable
         $isModelTranslatable = is_bread_translatable($dataTypeContent);
-        exit;
 
         $view = 'voyager::bread.read';
 
@@ -162,17 +161,12 @@ class VoyagerBreadController extends Controller
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
-
         // Check permission
         Voyager::canOrFail('edit_'.$dataType->name);
 
         //Validate fields with ajax
-
-            
-
         $val = $this->validateBread($request->all(), $dataType->editRows);
 
-        
         if ($val->fails()) {
             return response()->json(['errors' => $val->messages()]);
         }
@@ -272,9 +266,6 @@ class VoyagerBreadController extends Controller
 
     public function destroy(Request $request, $id)
     {
-
-
-        $user_id = $request->get('user_id');
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -319,11 +310,7 @@ class VoyagerBreadController extends Controller
                 'message'    => "Sorry it appears there was a problem deleting this {$dataType->display_name_singular}",
                 'alert-type' => 'error',
             ];
-            
-        if($user_id){
-            return redirect()->route("voyager.{$dataType->slug}.index", ['user_id' => $user_id])->with($data);
-        }else{
-            return redirect()->route("voyager.{$dataType->slug}.index")->with($data);
-        }
+
+        return redirect()->route("voyager.{$dataType->slug}.index")->with($data);
     }
 }

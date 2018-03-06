@@ -316,8 +316,6 @@ var VoyagerMedia = function(o){
 			$('#files li .selected').removeClass('selected');
 			$(cur).addClass('selected');
 			manager.selected_file = manager.files.items[$(cur).data('index')];
-			
-
 		}
 
 		function bytesToSize(bytes) {

@@ -31,7 +31,6 @@ class DataType extends Model
 
     public function rows()
     {
-
         return $this->hasMany(Voyager::modelClass('DataRow'))->orderBy('order');
     }
 
@@ -72,7 +71,6 @@ class DataType extends Model
 
     public function updateDataType($requestData, $throw = false)
     {
-
         try {
             DB::beginTransaction();
 

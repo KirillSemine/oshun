@@ -208,20 +208,6 @@ class ImageController extends Controller
     //   $constraint->upsize();
     // })->encode($file->getClientOriginalExtension(), 75);
 
-    //move uploaded file from temp to uploads directory
-    // if(Storage::disk(config('voyager.storage.disk'))->put($fullPath, $filename, 'public')){
-    //   $status = 'Image successfully uploaded!';
-    //   $fullFilename = $fullPath;
-    // } else {
-    //   $status = 'Upload Fail: Unknown error occurred!';
-    //   return response()->json([
-    //     'status' => 'error',
-    //     'error' => $status
-    //   ]); 
-    // }
-
-    $file->move($fullPath, $filename);
-
     // if(Storage::disk(config('voyager.storage.disk'))->put($fullPath, (string) $image, 'public')){
     //   $status = 'Image successfully uploaded!';
     //   $fullFilename = $fullPath;
@@ -233,13 +219,27 @@ class ImageController extends Controller
     //   ]); 
     // }
 
+    // move uploaded file from temp to uploads directory
+    if($temp = Storage::disk(config('voyager.storage.disk'))->putFile('users/'.$user_id, $file, 'public')){
+      $status = 'Image successfully uploaded!';
+      $fullFilename = $fullPath;
+    } else {
+      $status = 'Upload Fail: Unknown error occurred!';
+      return response()->json([
+        'status' => 'error',
+        'error' => $status
+      ]); 
+    }
+
+    
+
     $newImage = $this->userimage->create([
       'user_id' => $user_id,
-      'url' => $fullPath,
+      'url' => $temp,
       'description' => $description,
       'styles' => $styles
     ]);
-    $newImage->url = Voyager::image($fullPath);
+    $newImage->url = Voyager::image($temp);
     return response()->json([
       'result' => 'success',
       'image' => $newImage

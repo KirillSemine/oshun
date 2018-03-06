@@ -37,7 +37,7 @@ class VoyagerMediaController extends Controller
         }
 
         $dir = $this->directory.$folder;
-        
+
         return response()->json([
             'name'          => 'files',
             'type'          => 'folder',
@@ -174,7 +174,6 @@ class VoyagerMediaController extends Controller
     // Upload Working with 5.3
     public function upload(Request $request)
     {
-
         try {
             $path = $request->file->store($request->upload_path, $this->filesystem);
             $success = true;

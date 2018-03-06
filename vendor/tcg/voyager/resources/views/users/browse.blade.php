@@ -20,49 +20,40 @@
                         <table id="dataTable" class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Avatar</th>
                                     <th>Name</th>
                                     <th>Email</th>
-                                    <th>Birthday</th>
-                                    <th>City</th>
-                                    <th>Gender</th>
                                     <th>Created At</th>
+                                    <th>Avatar</th>
                                     <th>Role</th>
-                                    <th>Status</th>
                                     <th class="actions">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                             @foreach($dataTypeContent as $data)
                                 <tr>
-                                    <td>
-                                        {{$data->id}}
-                                    </td>
-                                    <td>
-                                        <img class="img-circle" src="@if( strpos($data->avatar, 'http://') === false && strpos($data->avatar, 'https://') === false){{ Voyager::image( $data->avatar ) }}@else{{ $data->avatar }}@endif" style="width:70px">
-                                    </td>
                                     <td>{{ucwords($data->name)}}</td>
                                     <td>{{$data->email}}</td>
-                                    <td>{{ \Carbon\Carbon::parse($data->birthday)->format('F jS, Y') }}</td> 
-                                    <td>{{$data->city}}</td>
-                                    <td>{{$data->gender == 0?'Man':'Woman'}}</td>
                                     <td>{{ \Carbon\Carbon::parse($data->created_at)->format('F jS, Y h:i A') }}</td> 
-                                    
+                                    <td>
+                                        <img src="@if( strpos($data->avatar, 'http://') === false && strpos($data->avatar, 'https://') === false){{ Voyager::image( $data->avatar ) }}@else{{ $data->avatar }}@endif" style="width:100px">
+                                    </td>
                                     <td>{{ $data->role ? $data->role->display_name : '' }}</td>
-                                    <td>{{$data->status == 0?'Inactive':'Active'}}</td>
-                                    <td class="no-sort no-click" >
+                                    <td class="no-sort no-click">
                                         @if (Voyager::can('delete_'.$dataType->name))
-                                            <div class="btn-sm btn-danger pull-left delete" data-id="{{ $data->id }}" id="delete-{{ $data->id }}">
-                                                <i class="voyager-trash"></i> 
+                                            <div class="btn-sm btn-danger pull-right delete" data-id="{{ $data->id }}" id="delete-{{ $data->id }}">
+                                                <i class="voyager-trash"></i> Delete
                                             </div>
                                         @endif
                                         @if (Voyager::can('edit_'.$dataType->name))
-                                            <a href="{{ route('voyager.'.$dataType->slug.'.edit', $data->id) }}" class="btn-sm btn-primary pull-left edit">
-                                                <i class="voyager-edit"></i> 
+                                            <a href="{{ route('voyager.'.$dataType->slug.'.edit', $data->id) }}" class="btn-sm btn-primary pull-right edit">
+                                                <i class="voyager-edit"></i> Edit
                                             </a>
                                         @endif
-                                        
+                                        @if (Voyager::can('read_'.$dataType->name))
+                                            <a href="{{ route('voyager.'.$dataType->slug.'.show', $data->id) }}" class="btn-sm btn-warning pull-right">
+                                                <i class="voyager-eye"></i> View
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

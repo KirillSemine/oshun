@@ -64,28 +64,7 @@ Route::group(['as' => 'voyager.'], function () {
                 Route::put('/', ['uses' => $namespacePrefix.'VoyagerMenuController@update_item', 'as' => 'update']);
             });
         });
-        Route::group([
-            'as'     => 'chat.',
-            'prefix' => 'chat',
-        ], function () use ($namespacePrefix) {
-            Route::get('/', ['uses' => $namespacePrefix.'VoyagerChatController@index',        'as' => 'index']);
-        });
 
-        Route::group([
-            'as'     => 'userimages.',
-            'prefix' => 'userimages',
-        ], function () use ($namespacePrefix) {
-            Route::get('/', ['uses' => $namespacePrefix.'VoyagerUserImagesController@index',        'as' => 'index']);
-            Route::get('/create', ['uses' => $namespacePrefix.'VoyagerUserImagesController@create',        'as' => 'create']);
-            Route::post('/', ['uses' => $namespacePrefix.'VoyagerUserImagesController@store',        'as' => 'store']);
-            // Route::delete('{id}', ['uses' => $namespacePrefix.'VoyagerUserImagesController@destroy',       'as' => 'delete']);
-            // Route::post('/', ['uses' => $namespacePrefix.'VoyagerSettingsController@store',        'as' => 'store']);
-            // Route::put('/', ['uses' => $namespacePrefix.'VoyagerSettingsController@update',       'as' => 'update']);
-            // Route::delete('{id}', ['uses' => $namespacePrefix.'VoyagerSettingsController@delete',       'as' => 'delete']);
-            // Route::get('{id}/move_up', ['uses' => $namespacePrefix.'VoyagerSettingsController@move_up',      'as' => 'move_up']);
-            // Route::get('{id}/move_down', ['uses' => $namespacePrefix.'VoyagerSettingsController@move_down',    'as' => 'move_down']);
-            // Route::get('{id}/delete_value', ['uses' => $namespacePrefix.'VoyagerSettingsController@delete_value', 'as' => 'delete_value']);
-        });
         // Settings
         Route::group([
             'as'     => 'settings.',

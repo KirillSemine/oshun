@@ -42,6 +42,7 @@ abstract class Controller extends BaseController
         $translations = is_bread_translatable($data)
                         ? $data->prepareTranslations($request)
                         : [];
+
         foreach ($rows as $row) {
             $options = json_decode($row->details);
 
@@ -76,7 +77,7 @@ abstract class Controller extends BaseController
                 $data->{$row->field} = $content;
             }
         }
-        
+
         $data->save();
 
         // Save translations
@@ -121,7 +122,6 @@ abstract class Controller extends BaseController
 
     public function getContentBasedOnType(Request $request, $slug, $row)
     {
-        
         $content = null;
         switch ($row->type) {
             /********** PASSWORD TYPE **********/
@@ -265,7 +265,6 @@ abstract class Controller extends BaseController
 
                     $options = json_decode($row->details);
 
-
                     if (isset($options->resize) && isset($options->resize->width) && isset($options->resize->height)) {
                         $resize_width = $options->resize->width;
                         $resize_height = $options->resize->height;
@@ -274,14 +273,13 @@ abstract class Controller extends BaseController
                         $resize_height = null;
                     }
 
-
                     $image = Image::make($file)->resize($resize_width, $resize_height,
                         function (Constraint $constraint) {
                             $constraint->aspectRatio();
                             $constraint->upsize();
                         })->encode($file->getClientOriginalExtension(), 75);
 
-                    Storage::disk(config('voyager.storage.disk'))->put($fullPath, (string) $image);
+                    Storage::disk(config('voyager.storage.disk'))->put($fullPath, (string) $image, 'public');
 
                     if (isset($options->thumbnails)) {
                         foreach ($options->thumbnails as $thumbnails) {
@@ -311,8 +309,8 @@ abstract class Controller extends BaseController
                                     ->encode($file->getClientOriginalExtension(), 75);
                             }
 
-                            diskfreespace()(config('voyager.storage.disk'))->put($path.$filename.'-'.$thumbnails->name.'.'.$file->getClientOriginalExtension(),
-                                (string) $image
+                            Storage::disk(config('voyager.storage.disk'))->put($path.$filename.'-'.$thumbnails->name.'.'.$file->getClientOriginalExtension(),
+                                (string) $image, 'public'
                             );
                         }
                     }

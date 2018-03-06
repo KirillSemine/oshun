@@ -2,9 +2,8 @@
 
 class PushNotification {
 
-    public static function app($appName)
+    public function app($appName)
     {
-
         $config = is_array($appName) ? $appName : config('push-notification.'.$appName);
         return new App($config);
     }

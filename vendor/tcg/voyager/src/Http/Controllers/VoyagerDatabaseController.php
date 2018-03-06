@@ -275,7 +275,6 @@ class VoyagerDatabaseController extends Controller
 
     public function addEditBread($table)
     {
-
         Voyager::canOrFail('browse_database');
 
         $dataType = Voyager::model('DataType')->whereName($table)->first();

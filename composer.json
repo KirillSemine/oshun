@@ -6,12 +6,13 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "brozot/laravel-fcm": "^1.2",
+        "davibennun/laravel-push-notification": "dev-laravel5",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
+        "oureastudios/laravel5-braintree": "dev-master",
         "tcg/voyager": "^0.11.14",
-        "tymon/jwt-auth": "0.5.*",
-        "davibennun/laravel-push-notification": "dev-laravel5",
-        "oureastudios/laravel5-braintree": "dev-master"
+        "tymon/jwt-auth": "0.5.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

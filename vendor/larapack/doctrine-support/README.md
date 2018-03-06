@@ -15,3 +15,5 @@ Larapack\DoctrineSupport\DoctrineSupportServiceProvider::class
 ```
 
 Then you are good to go! 🎉
+
+> For Laravel versions older than 5.4.x, use `v0.1.3`.

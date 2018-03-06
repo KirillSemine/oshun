@@ -531,9 +531,9 @@ class UserController extends Controller
     if ($pos === false){
       PushNotification::app('Oshun')
                       ->to($oppoentuser->device_token)
-                      ->send($user->name.' would like to contact with you.');
+                      ->send($user->name.'('.$user_id.')'.' would like to contact with you');
     } else {
-      UserController::AndroidPushNotification($oppoentuser->device_token, 'ContactRequest', $user->name.' would like to contact with you.');
+      UserController::AndroidPushNotification($oppoentuser->device_token, 'ContactRequest', $user->name.'('.$user_id.')'.' would like to contact with you');
     }
     
 
@@ -580,9 +580,9 @@ class UserController extends Controller
     if ($pos === false){
       PushNotification::app('Oshun')
                       ->to($oppoentuser->device_token)
-                      ->send($user->name.' accepted your contact request.');
+                      ->send($user->name.' accepted your contact request');
     } else {
-      UserController::AndroidPushNotification($oppoentuser->device_token, 'ContactAccept', $user->name.' accepted your contact request.');
+      UserController::AndroidPushNotification($oppoentuser->device_token, 'ContactAccept', $user->name.' accepted your contact request');
     }
 
     return response()->json([

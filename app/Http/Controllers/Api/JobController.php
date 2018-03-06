@@ -62,9 +62,9 @@ class JobController extends Controller
     if ($pos === false){
       PushNotification::app('Oshun')
                       ->to($oppoentuser->device_token)
-                      ->send($user->name.' has awarded you for '.$job->id.'.');
+                      ->send($user->name.' has awarded you for job '.$job->id);
     } else {
-      UserController::AndroidPushNotification($oppoentuser->device_token, 'JobRequest', $user->name.' has awarded you for '.$job->id.'.');
+      UserController::AndroidPushNotification($oppoentuser->device_token, 'JobRequest', $user->name.' has awarded you for job '.$job->id);
     }
 
     return response()->json([
@@ -96,9 +96,9 @@ class JobController extends Controller
     if ($pos === false){
       PushNotification::app('Oshun')
                       ->to($oppoentuser->device_token)
-                      ->send($user->name.' edited job '.$job_id.'.');
+                      ->send($user->name.' edited job '.$job_id);
     } else {
-      UserController::AndroidPushNotification($oppoentuser->device_token, 'JobEdit', $user->name.' edited job '.$job_id.'.');
+      UserController::AndroidPushNotification($oppoentuser->device_token, 'JobEdit', $user->name.' edited job '.$job_id);
     }
 
     return response()->json([
@@ -160,9 +160,9 @@ class JobController extends Controller
     if ($pos === false){
       PushNotification::app('Oshun')
                       ->to($oppoentuser->device_token)
-                      ->send($user->name.' edited job '.$job_id.'.');
+                      ->send($oppoentuser->name.' accepted your offer');
     } else {
-      UserController::AndroidPushNotification($user->device_token , 'JobAccept', $oppoentuser->name.' accepted your offer.');
+      UserController::AndroidPushNotification($user->device_token , 'JobAccept', $oppoentuser->name.' accepted your offer');
     }
 
 
